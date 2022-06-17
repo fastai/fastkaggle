@@ -2,6 +2,7 @@
 SHELL := /bin/bash
 
 exp:
+	nbprocess_clean
 	nbprocess_export
 
 help: ## Show this help
