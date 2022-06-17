@@ -23,6 +23,9 @@ jobs:
           python -m pip install git+https://github.com/fastai/nbprocess.git
           make install
       - name: Build website
+        env:
+          KAGGLE_USERNAME: test
+          KAGGLE_KEY: test
         run: make docs
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3

@@ -26,4 +26,4 @@ d = { 'settings': { 'audience': 'Developers',
                 'tst_flags': 'notest',
                 'user': 'fastai',
                 'version': '0.0.1'},
-  'syms': {'fastkaggle.core': {'fastkaggle.core.foo': 'https://fastai.github.io/fastkaggle/core#foo'}}}
+  'syms': {'fastkaggle.core': {'fastkaggle.core.iskaggle': 'https://fastai.github.io/fastkaggle/core#iskaggle'}}}

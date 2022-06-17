@@ -26,4 +26,7 @@ jobs:
           git status -s # display the status to see which nbs need cleaning up
           if [ -n "$(git status -uno -s)" ]; then echo -e "!!! Detected unstripped out notebooks\n!!!Remember to run nbprocess_install_hooks"; false; fi
       - name: Test Notebooks
+        env:
+          KAGGLE_USERNAME: test
+          KAGGLE_KEY: test
         run: nbprocess_test
