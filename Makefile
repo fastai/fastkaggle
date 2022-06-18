@@ -49,6 +49,7 @@ dist: clean
 clean:
 	rm -rf dist
 	
+
 install: install_quarto ## Install quarto and the latest version of the local python pckage as an editable install
 	pip install -e ".[dev]"
 
