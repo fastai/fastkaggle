@@ -23,7 +23,7 @@ def setup_comp(competition, install=''):
     "Get a path to data for `competition`, downloading it if needed"
     if iskaggle:
         if install:
-            !pip install -Uqq {install}
+            os.system(f'pip install -Uqq {install}')
         return Path('../input')/competition
     else:
         path = Path(competition)
