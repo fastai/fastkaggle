@@ -36,6 +36,7 @@ def setup_comp(competition, install=''):
 
 # %% ../00_core.ipynb 9
 def nb_meta(user, id, title, file, competition=None, private=True, gpu=False, internet=True):
+    "Get the `dict` required for a kernel-metadata.json file"
     d = {
       "id": f"{user}/{id}",
       "title": title,
@@ -54,6 +55,7 @@ def nb_meta(user, id, title, file, competition=None, private=True, gpu=False, in
 
 # %% ../00_core.ipynb 11
 def push_notebook(user, id, title, file, path='.', competition=None, private=True, gpu=False, internet=True):
+    "Push notebook `file` to Kaggle Notebooks"
     meta = nb_meta(user, id, title, file=file, competition=competition, private=private, gpu=gpu, internet=internet)
     path = Path(path)
     nm = 'kernel-metadata.json'
