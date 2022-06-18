@@ -37,7 +37,7 @@ release_all: pypi conda_release ## Release python package on pypi and conda.  Al
 release_pypi: pypi ## Release python package on pypi.  Also bumps version number automatically.
 	nbdev_bump_version
 
-conda_release:
+release_conda:
 	fastrelease_conda_package
 
 pypi: dist
