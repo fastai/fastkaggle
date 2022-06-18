@@ -27,6 +27,7 @@ d = { 'settings': { 'audience': 'Developers',
                 'user': 'fastai',
                 'version': '0.0.3'},
   'syms': { 'fastkaggle.core': { 'fastkaggle.core.iskaggle': 'https://fastai.github.io/fastkaggle/core#iskaggle',
+                                 'fastkaggle.core.kaggle_secrets': 'https://fastai.github.io/fastkaggle/core#kaggle_secrets',
                                  'fastkaggle.core.nb_meta': 'https://fastai.github.io/fastkaggle/core#nb_meta',
                                  'fastkaggle.core.push_notebook': 'https://fastai.github.io/fastkaggle/core#push_notebook',
                                  'fastkaggle.core.setup_comp': 'https://fastai.github.io/fastkaggle/core#setup_comp'}}}
