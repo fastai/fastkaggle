@@ -3,7 +3,9 @@
 __all__ = ["index", "modules", "custom_doc_links", "git_url"]
 
 index = {"iskaggle": "00_core.ipynb",
-         "setup_comp": "00_core.ipynb"}
+         "setup_comp": "00_core.ipynb",
+         "nb_meta": "00_core.ipynb",
+         "push_notebook": "00_core.ipynb"}
 
 modules = ["core.py"]
 
