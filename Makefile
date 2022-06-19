@@ -31,7 +31,7 @@ prepare: ## Export notebooks to python modules, test code and clean notebooks.
 test: ## Test notebooks
 	nbprocess_test
 
-release_all: pypi conda_release ## Release python package on pypi and conda.  Also bumps version number automatically.
+release_all: pypi release_conda ## Release python package on pypi and conda.  Also bumps version number automatically.
 	nbdev_bump_version
 	nbprocess_export
 
