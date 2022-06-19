@@ -65,4 +65,5 @@ def push_notebook(user, id, title, file, path='.', competition=None, private=Tru
     nm = 'kernel-metadata.json'
     path.mkdir(exist_ok=True, parents=True)
     with open(path/nm, 'w') as f: json.dump(meta, f, indent=2)
+    from kaggle import api
     api.kernels_push_cli(str(path))
