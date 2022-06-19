@@ -35,7 +35,7 @@ def setup_comp(competition, install=''):
         if not path.exists():
             import zipfile
             api.competition_download_cli(str(competition))
-            zipfile.ZipFile(f'{comp}.zip').extractall(str(competition))
+            zipfile.ZipFile(f'{competition}.zip').extractall(str(competition))
         return path
 
 # %% ../00_core.ipynb 11
