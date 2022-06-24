@@ -3,14 +3,14 @@
 # %% auto 0
 __all__ = ['iskaggle', 'import_kaggle', 'setup_comp', 'nb_meta', 'push_notebook']
 
-# %% ../00_core.ipynb 4
+# %% ../00_core.ipynb 3
 import os,json
 from fastcore.utils import *
 
-# %% ../00_core.ipynb 5
+# %% ../00_core.ipynb 4
 iskaggle = os.environ.get('KAGGLE_KERNEL_RUN_TYPE', '')
 
-# %% ../00_core.ipynb 6
+# %% ../00_core.ipynb 5
 def import_kaggle():
     "Import kaggle API, using Kaggle secrets `kaggle_username` and `kaggle_key` if needed"
     if iskaggle:
@@ -22,7 +22,7 @@ def import_kaggle():
     from kaggle import api
     return api
 
-# %% ../00_core.ipynb 8
+# %% ../00_core.ipynb 7
 def setup_comp(competition, install=''):
     "Get a path to data for `competition`, downloading it if needed"
     if iskaggle:
@@ -38,7 +38,7 @@ def setup_comp(competition, install=''):
             zipfile.ZipFile(f'{competition}.zip').extractall(str(competition))
         return path
 
-# %% ../00_core.ipynb 11
+# %% ../00_core.ipynb 10
 def nb_meta(user, id, title, file, competition=None, private=True, gpu=False, internet=True):
     "Get the `dict` required for a kernel-metadata.json file"
     d = {
@@ -57,7 +57,7 @@ def nb_meta(user, id, title, file, competition=None, private=True, gpu=False, in
     if competition: d["competition_sources"] = [f"competitions/{competition}"]
     return d
 
-# %% ../00_core.ipynb 13
+# %% ../00_core.ipynb 12
 def push_notebook(user, id, title, file, path='.', competition=None, private=True, gpu=False, internet=True):
     "Push notebook `file` to Kaggle Notebooks"
     meta = nb_meta(user, id, title, file=file, competition=competition, private=private, gpu=gpu, internet=internet)
