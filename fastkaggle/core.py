@@ -71,7 +71,11 @@ def push_notebook(user, id, title, file, path='.', competition=None, private=Tru
     api.kernels_push_cli(str(path))
 
 # %% ../00_core.ipynb 15
-def mk_dataset(dataset_path, title,force=False,upload=True):
+def mk_dataset(dataset_path, # Local path to create dataset in
+               title, # Name of the dataset
+               force=False, # Should it overwrite or error if exists?
+               upload=True # Should it upload and create on kaggle
+              ):
     '''Creates minimal dataset metadata needed to push new dataset to kaggle'''
     dataset_path = Path(dataset_path)
     dataset_path.mkdir(exist_ok=force,parents=True)
@@ -84,12 +88,12 @@ def mk_dataset(dataset_path, title,force=False,upload=True):
     api.dataset_create_new(str(dataset_path),public=True,dir_mode='zip')
 
 # %% ../00_core.ipynb 17
-def get_dataset(dataset_path,dataset_slug,unzip=True,force=False):
-    '''Downloads an existing dataset and metadata from kaggle
-    
-    dataset_path: Local path to download dataset to
-    dataset_slug: kaggle dataset slug, ie zillow/zecon
-    '''
+def get_dataset(dataset_path, # Local path to download dataset to
+                dataset_slug, # Dataset slug (ie "zillow/zecon")
+                unzip=True, # Should it unzip after downloading?
+                force=False # Should it overwrite or error if dataset_path exists?
+               ):
+    '''Downloads an existing dataset and metadata from kaggle'''
     if not force: assert not Path(dataset_path).exists()
     api.dataset_metadata(dataset_slug,str(dataset_path))
     api.dataset_download_files(dataset_slug,str(dataset_path))
@@ -102,13 +106,18 @@ def get_dataset(dataset_path,dataset_slug,unzip=True,force=False):
     
 
 # %% ../00_core.ipynb 19
-def get_pip_library(dataset_path,pip_library,pip_cmd="pip"):    
+def get_pip_library(dataset_path, # Local path to download pip library to
+                    pip_library, # name of library for pip to install
+                    pip_cmd="pip" # pip base to use (ie "pip3" or "pip")
+                   ):    
     '''Download the whl files for pip_library and store in dataset_path'''
     bashCommand = f"{pip_cmd} download {pip_library} -d {dataset_path}"
     process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
     output, error = process.communicate()
 
 # %% ../00_core.ipynb 21
-def push_dataset(dataset_path, version_comment):
-    '''push dataset update to kaggle'''
+def push_dataset(dataset_path, # Local path where dataset is stored 
+                 version_comment # Comment associated with this dataset update
+                ):
+    '''Push dataset update to kaggle.  Dataset path must contain dataset metadata file'''
     api.dataset_create_version(str(dataset_path),version_comment,dir_mode='zip')
