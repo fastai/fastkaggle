@@ -7,7 +7,6 @@ __all__ = ['iskaggle', 'import_kaggle', 'setup_comp', 'nb_meta', 'push_notebook'
 # %% ../00_core.ipynb 3
 import os,json,subprocess
 from fastcore.utils import *
-from kaggle import api
 
 # %% ../00_core.ipynb 4
 iskaggle = os.environ.get('KAGGLE_KERNEL_RUN_TYPE', '')
@@ -33,7 +32,7 @@ def setup_comp(competition, install=''):
         return Path('../input')/competition
     else:
         path = Path(competition)
-        from kaggle import api
+        api = import_kaggle()
         if not path.exists():
             import zipfile
             api.competition_download_cli(str(competition))
@@ -67,7 +66,7 @@ def push_notebook(user, id, title, file, path='.', competition=None, private=Tru
     nm = 'kernel-metadata.json'
     path.mkdir(exist_ok=True, parents=True)
     with open(path/nm, 'w') as f: json.dump(meta, f, indent=2)
-    from kaggle import api
+    api = import_kaggle()
     api.kernels_push_cli(str(path))
 
 # %% ../00_core.ipynb 15
@@ -79,6 +78,7 @@ def mk_dataset(dataset_path, # Local path to create dataset in
     '''Creates minimal dataset metadata needed to push new dataset to kaggle'''
     dataset_path = Path(dataset_path)
     dataset_path.mkdir(exist_ok=force,parents=True)
+    api = import_kaggle()
     api.dataset_initialize(dataset_path)
     md = json.load(open(dataset_path/'dataset-metadata.json'))
     md['title'] = title
@@ -95,6 +95,7 @@ def get_dataset(dataset_path, # Local path to download dataset to
                ):
     '''Downloads an existing dataset and metadata from kaggle'''
     if not force: assert not Path(dataset_path).exists()
+    api = import_kaggle()
     api.dataset_metadata(dataset_slug,str(dataset_path))
     api.dataset_download_files(dataset_slug,str(dataset_path))
     if unzip:
@@ -120,4 +121,5 @@ def push_dataset(dataset_path, # Local path where dataset is stored
                  version_comment # Comment associated with this dataset update
                 ):
     '''Push dataset update to kaggle.  Dataset path must contain dataset metadata file'''
+    api = import_kaggle()
     api.dataset_create_version(str(dataset_path),version_comment,dir_mode='zip')
