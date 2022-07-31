@@ -7,7 +7,7 @@ __all__ = ['iskaggle', 'import_kaggle', 'setup_comp', 'nb_meta', 'push_notebook'
 # %% ../00_core.ipynb 3
 import os,json,subprocess
 from fastcore.utils import *
-
+from kaggle import api
 
 # %% ../00_core.ipynb 4
 iskaggle = os.environ.get('KAGGLE_KERNEL_RUN_TYPE', '')
