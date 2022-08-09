@@ -1,0 +1,7 @@
+website:
+  sidebar:
+    contents:
+      - index.ipynb
+      - 00_core.ipynb
+      - CHANGELOG.md
+      - README.md

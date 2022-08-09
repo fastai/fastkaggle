@@ -1,4 +1,4 @@
-ipynb-filters: [nbprocess_filter]
+ipynb-filters: [nbdev_filter]
 
 project:
   type: website
@@ -15,7 +15,7 @@ format:
 
 website:
   title: "fastkaggle"
-  description: "A description of your project"
+  description: "Kaggling for fast kagglers!"
   execute: 
     enabled: false
   twitter-card: true
@@ -27,9 +27,6 @@ website:
   navbar:
     background: primary
     search: true
-    left:
-      - text: Home
-        file: index.ipynb
     right:
       - icon: github
         href: https://github.com/fastai/fastkaggle/tree/master/
@@ -39,4 +36,3 @@ website:
 metadata-files: 
   - sidebar.yml
   - custom.yml
-
