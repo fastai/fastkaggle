@@ -2,41 +2,41 @@
 SHELL := /bin/bash
 
 exp:
-	nbprocess_clean
-	nbprocess_export
+	nbdev_clean
+	nbdev_export
 
 help: ## Show this help
 	@egrep -h '\s##\s' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
 sync: ## Propagates any change in the modules (.py files) to the notebooks that created them 
-	nbprocess_update
+	nbdev_update
 
 deploy: docs ## Push local docs to gh-pages branch
-	nbprocess_ghp_deploy
+	nbdev_ghp_deploy
 
 preview: ## Live preview quarto docs with hot reloading.
-	nbprocess_sidebar
-	nbprocess_export
-	IN_TEST=1 &&  nbprocess_quarto --preview
+	nbdev_sidebar
+	nbdev_export
+	IN_TEST=1 &&  nbdev_quarto --preview
 
 docs: .FORCE ## Build quarto docs and put them into folder specified in `doc_path` in settings.ini
-	nbprocess_export
-	nbprocess_quarto
+	nbdev_export
+	nbdev_quarto
 
 prepare: ## Export notebooks to python modules, test code and clean notebooks.
-	nbprocess_export
-	nbprocess_test
-	nbprocess_clean
+	nbdev_export
+	nbdev_test
+	nbdev_clean
 	
 test: ## Test notebooks
-	nbprocess_test
+	nbdev_test
 
 release_all: pypi release_conda ## Release python package on pypi and conda.  Also bumps version number automatically.
 	nbdev_bump_version
-	nbprocess_export
+	nbdev_export
 
 release_pypi: pypi ## Release python package on pypi.  Also bumps version number automatically.
-	nbprocess_export
+	nbdev_export
 	nbdev_bump_version
 
 release_conda:
@@ -56,7 +56,7 @@ install: install_quarto ## Install quarto and the latest version of the local py
 	pip install -e ".[dev]"
 
 install_py: .FORCE
-	nbprocess_export
+	nbdev_export
 	pip install -e ".[dev]"
 
 install_quarto: .FORCE ## Install the latest version of quarto for Mac and Linux.  Go to https://quarto.org/docs/get-started/ for Windows.
