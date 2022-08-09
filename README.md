@@ -24,8 +24,8 @@ This little library is where I’ll be putting snippets of stuff which are
 useful on Kaggle. Functionality includes the following:
 
 It defines
-[iskaggle](https://fastai.github.io/fastkaggle/core.html#iskaggle) which
-is `True` if you’re running on Kaggle:
+[`iskaggle`](https://fastai.github.io/fastkaggle/core.html#iskaggle)
+which is `True` if you’re running on Kaggle:
 
 ``` python
 'Kaggle' if iskaggle else 'Not Kaggle'
@@ -34,7 +34,7 @@ is `True` if you’re running on Kaggle:
     'Not Kaggle'
 
 It provides a
-[setup_comp](https://fastai.github.io/fastkaggle/core.html#setup_comp)
+[`setup_comp`](https://fastai.github.io/fastkaggle/core.html#setup_comp)
 function which gets a path to the data for a competition, downloading it
 if needed, and also installs any modules that might be missing or out of
 data if running on Kaggle:
@@ -46,9 +46,9 @@ setup_comp('titanic')
     Path('titanic')
 
 There’s also
-[push_notebook](https://fastai.github.io/fastkaggle/core.html#push_notebook)
+[`push_notebook`](https://fastai.github.io/fastkaggle/core.html#push_notebook)
 to push a notebook to Kaggle Notebooks, and
-[import_kaggle](https://fastai.github.io/fastkaggle/core.html#import_kaggle)
+[`import_kaggle`](https://fastai.github.io/fastkaggle/core.html#import_kaggle)
 to use the Kaggle API (even when you’re on Kaggle!) See the
 `fastkaggle.core` docs for details.
 
