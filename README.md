@@ -98,7 +98,7 @@ create_libs_datasets(libs,lib_path,username)
 
 This creates datasets in kaggle with the needed files.
 
-![Pawpularity Dataset](libraries-pawpularity.png)
+![Pawpularity Dataset](images/libraries-pawpularity.png)
 
 #### requirements.txt
 
@@ -119,4 +119,4 @@ create_requirements_dataset('test_files/requirements.txt',lib_path,'libraries-pa
 
 This creats a dataset in kaggle with the needed files.
 
-![Fastkaggle Dataset](library-fastkaggle.png)
+![Fastkaggle Dataset](images/library-fastkaggle.png)
