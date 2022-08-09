@@ -3,5 +3,8 @@ website:
     contents:
       - index.ipynb
       - 00_core.ipynb
-      - CHANGELOG.md
-      - README.md
+      - section: docs
+        contents:
+          - docs/index.html
+          - docs/CHANGELOG.html
+          - docs/core.html

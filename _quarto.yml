@@ -12,9 +12,11 @@ format:
     theme: cosmo
     css: styles.css
     toc: true
+    toc-depth: 4
 
 website:
   title: "fastkaggle"
+  site-url: "https://fastai.github.io/fastkaggle/"
   description: "Kaggling for fast kagglers!"
   execute: 
     enabled: false
@@ -22,14 +24,14 @@ website:
   open-graph: true
   reader-mode: true
   repo-branch: master
-  repo-url: https://github.com/fastai/fastkaggle/tree/master/
+  repo-url: "https://github.com/fastai/fastkaggle/tree/master/"
   repo-actions: [issue]
   navbar:
     background: primary
     search: true
     right:
       - icon: github
-        href: https://github.com/fastai/fastkaggle/tree/master/
+        href: "https://github.com/fastai/fastkaggle/tree/master/"
   sidebar:
     style: "floating"
 

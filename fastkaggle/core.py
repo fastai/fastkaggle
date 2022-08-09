@@ -119,7 +119,7 @@ def get_dataset(dataset_path, # Local path to download dataset to
         zipped_file.unlink()
     
 
-# %% ../00_core.ipynb 21
+# %% ../00_core.ipynb 20
 def get_pip_library(dataset_path, # Local path to download pip library to
                     pip_library, # name of library for pip to install
                     pip_cmd="pip" # pip base to use (ie "pip3" or "pip")
@@ -129,7 +129,7 @@ def get_pip_library(dataset_path, # Local path to download pip library to
     process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
     output, error = process.communicate()
 
-# %% ../00_core.ipynb 22
+# %% ../00_core.ipynb 21
 def get_pip_libraries(dataset_path, # Local path to download pip library to
                     requirements_path, # path to requirements file
                       pip_cmd="pip" # pip base to use (ie "pip3" or "pip")
@@ -139,7 +139,7 @@ def get_pip_libraries(dataset_path, # Local path to download pip library to
     process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
     output, error = process.communicate()
 
-# %% ../00_core.ipynb 24
+# %% ../00_core.ipynb 23
 def push_dataset(dataset_path, # Local path where dataset is stored 
                  version_comment # Comment associated with this dataset update
                 ):
@@ -147,7 +147,7 @@ def push_dataset(dataset_path, # Local path where dataset is stored
     api = import_kaggle()
     api.dataset_create_version(str(dataset_path),version_comment,dir_mode='zip',quiet=True)
 
-# %% ../00_core.ipynb 25
+# %% ../00_core.ipynb 24
 def get_local_ds_ver(lib_path, # Local path dataset is stored in
                      lib # Name of library (ie "fastcore")
                     ):
@@ -157,7 +157,7 @@ def get_local_ds_ver(lib_path, # Local path dataset is stored in
         return re.search(f"(?<={lib}_)[\d+.]+",lib_whl[0].name.lower().replace('-','_'))[0]
     else: return "No Version Found"
 
-# %% ../00_core.ipynb 28
+# %% ../00_core.ipynb 27
 def create_libs_datasets(libs, # List of libraries to create datasets for (ie ['fastcore','fastkaggle']
                          lib_path, # Local path to dl/create dataset
                          username # You username
@@ -194,7 +194,7 @@ def create_libs_datasets(libs, # List of libraries to create datasets for (ie ['
         else: print(f"-----Kaggle dataset already up to date {ver_local_orig} to {ver_local_new}")
     print('Complete')
 
-# %% ../00_core.ipynb 29
+# %% ../00_core.ipynb 28
 def create_requirements_dataset(req_fpath, # Path to requirements.txt file
                                 lib_path,#Local path to dl/create dataset
                                 title, # Title you want the kaggle dataset named
