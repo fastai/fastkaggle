@@ -12,31 +12,29 @@ format:
     theme: cosmo
     css: styles.css
     toc: true
+    toc-depth: 4
 
 website:
   title: "fastkaggle"
-  description: "A description of your project"
+  site-url: "https://fastai.github.io/fastkaggle/"
+  description: "Kaggling for fast kagglers!"
   execute: 
     enabled: false
   twitter-card: true
   open-graph: true
   reader-mode: true
   repo-branch: master
-  repo-url: https://github.com/fastai/fastkaggle/tree/master/
+  repo-url: "https://github.com/fastai/fastkaggle/tree/master/"
   repo-actions: [issue]
   navbar:
     background: primary
     search: true
-    left:
-      - text: Home
-        file: index.ipynb
     right:
       - icon: github
-        href: https://github.com/fastai/fastkaggle/tree/master/
+        href: "https://github.com/fastai/fastkaggle/tree/master/"
   sidebar:
     style: "floating"
 
 metadata-files: 
   - sidebar.yml
   - custom.yml
-
