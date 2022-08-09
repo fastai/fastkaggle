@@ -2,10 +2,11 @@
 
 # %% auto 0
 __all__ = ['iskaggle', 'import_kaggle', 'setup_comp', 'nb_meta', 'push_notebook', 'check_ds_exists', 'mk_dataset', 'get_dataset',
-           'get_pip_library', 'push_dataset', 'get_local_ds_ver', 'get_pip_lib_ver']
+           'get_pip_library', 'get_pip_libraries', 'push_dataset', 'get_local_ds_ver', 'create_libs_datasets',
+           'create_requirements_dataset']
 
 # %% ../00_core.ipynb 3
-import os,json,subprocess
+import os,json,subprocess, shutil
 import re
 from fastcore.utils import *
 # from fastcore.all import *
@@ -71,8 +72,8 @@ def push_notebook(user, id, title, file, path='.', competition=None, private=Tru
     api = import_kaggle()
     api.kernels_push_cli(str(path))
 
-# %% ../00_core.ipynb 15
-def check_ds_exists(dataset_slug# Dataset slug (ie "zillow/zecon")
+# %% ../00_core.ipynb 16
+def check_ds_exists(dataset_slug # Dataset slug (ie "zillow/zecon")
                    ):
     '''Checks if a dataset exists in kaggle and returns boolean'''
     api = import_kaggle()
@@ -81,7 +82,7 @@ def check_ds_exists(dataset_slug# Dataset slug (ie "zillow/zecon")
     elif len(ds_search)==0: return False
     else: raise exception("Multiple datasets found - Check Manually")
 
-# %% ../00_core.ipynb 16
+# %% ../00_core.ipynb 17
 def mk_dataset(dataset_path, # Local path to create dataset in
                title, # Name of the dataset
                force=False, # Should it overwrite or error if exists?
@@ -99,7 +100,7 @@ def mk_dataset(dataset_path, # Local path to create dataset in
     if upload: (dataset_path/'empty.txt').touch()
     api.dataset_create_new(str(dataset_path),public=True,dir_mode='zip',quiet=True)
 
-# %% ../00_core.ipynb 18
+# %% ../00_core.ipynb 19
 def get_dataset(dataset_path, # Local path to download dataset to
                 dataset_slug, # Dataset slug (ie "zillow/zecon")
                 unzip=True, # Should it unzip after downloading?
@@ -118,7 +119,7 @@ def get_dataset(dataset_path, # Local path to download dataset to
         zipped_file.unlink()
     
 
-# %% ../00_core.ipynb 20
+# %% ../00_core.ipynb 21
 def get_pip_library(dataset_path, # Local path to download pip library to
                     pip_library, # name of library for pip to install
                     pip_cmd="pip" # pip base to use (ie "pip3" or "pip")
@@ -129,6 +130,16 @@ def get_pip_library(dataset_path, # Local path to download pip library to
     output, error = process.communicate()
 
 # %% ../00_core.ipynb 22
+def get_pip_libraries(dataset_path, # Local path to download pip library to
+                    requirements_path, # path to requirements file
+                      pip_cmd="pip" # pip base to use (ie "pip3" or "pip")
+                     ):
+    '''Download whl files for a requirements.txt file and store in dataset_path'''
+    bashCommand = f"{pip_cmd} download -r {requirements_path} -d {dataset_path}"
+    process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
+    output, error = process.communicate()
+
+# %% ../00_core.ipynb 24
 def push_dataset(dataset_path, # Local path where dataset is stored 
                  version_comment # Comment associated with this dataset update
                 ):
@@ -136,22 +147,84 @@ def push_dataset(dataset_path, # Local path where dataset is stored
     api = import_kaggle()
     api.dataset_create_version(str(dataset_path),version_comment,dir_mode='zip',quiet=True)
 
-# %% ../00_core.ipynb 23
+# %% ../00_core.ipynb 25
 def get_local_ds_ver(lib_path, # Local path dataset is stored in
                      lib # Name of library (ie "fastcore")
                     ):
     '''checks a local copy of kaggle dataset for library version number'''
-    lib_whl = (lib_path/lib).ls().filter(lambda x: lib in x.name.lower())
-    try:
-        assert 1==len(lib_whl)
-        return re.search(f"(?<={lib}-)[\d+.]+",lib_whl[0].name.lower())[0]
-    except: return "No Version Found"
+    lib_whl = (lib_path/f"library-{lib}").ls().filter(lambda x: lib in x.name.lower())
+    if 1==len(lib_whl):
+        return re.search(f"(?<={lib}_)[\d+.]+",lib_whl[0].name.lower().replace('-','_'))[0]
+    else: return "No Version Found"
 
-# %% ../00_core.ipynb 24
-def get_pip_lib_ver(lib # pip library (ie "fastcore")
-                   ):
-    '''checks pip for most recent library version number'''
-    lib_show = subprocess.check_output(['pip', 'show', lib])
-    lib_details = {s[0].strip():s[1].strip() for s in [str(o).split(':') for o in lib_show.splitlines()]}
-    ver_pip = re.search('[\d+.-]+', lib_details["b'Version"])[0]
-    return ver_pip
+# %% ../00_core.ipynb 28
+def create_libs_datasets(libs, # List of libraries to create datasets for (ie ['fastcore','fastkaggle']
+                         lib_path, # Local path to dl/create dataset
+                         username # You username
+                        ):
+    '''For each library, create or update a kaggle dataset with the latest version'''
+    retain = ["dataset-metadata.json"]
+    for lib in libs:
+        title = f"library-{lib}"
+        local_path = lib_path/title
+        print(f"Processing {lib} as {title} at {local_path}")
+        if Path(local_path).exists(): shutil.rmtree(local_path)
+
+        print(f"-----Downloading or Creating Dataset")
+        if check_ds_exists(f"{username}/{title}"): 
+            get_dataset(local_path,f"{username}/{title}",force=True)
+        else:                                       
+            mk_dataset(local_path,title,force=True)
+        print(f"-----Checking dataset version against pip")
+        ver_local_orig = get_local_ds_ver(lib_path,lib)
+        orig_ds = Path(local_path).ls().sorted()
+
+        for item in local_path.ls():
+            if item.name not in retain: 
+                if item.is_dir(): shutil.rmtree(item)
+                else: item.unlink()
+        get_pip_library(local_path,lib)
+        
+        ver_local_new = get_local_ds_ver(lib_path,lib)
+        new_ds = Path(local_path).ls().sorted()
+
+        if orig_ds != new_ds: 
+            print(f"-----Updating {lib} in Kaggle from {ver_local_orig} to {ver_local_new}")
+            push_dataset(local_path,ver_local_new)
+        else: print(f"-----Kaggle dataset already up to date {ver_local_orig} to {ver_local_new}")
+    print('Complete')
+
+# %% ../00_core.ipynb 29
+def create_requirements_dataset(req_fpath, # Path to requirements.txt file
+                                lib_path,#Local path to dl/create dataset
+                                title, # Title you want the kaggle dataset named
+                                username, # you username
+                                retain = ["dataset-metadata.json"], # Files that should not be removed
+                                version_notes = "New Update"
+                               ):
+    '''Download everything needed in a `requirements.txt` file to a dataset and upload to kaggle'''
+    local_path = lib_path/title
+    print(f"Processing {title} at {local_path}")
+    if Path(local_path).exists(): shutil.rmtree(local_path)
+
+    print(f"-----Downloading or Creating Dataset")
+    if check_ds_exists(f"{username}/{title}"): 
+        get_dataset(local_path,f"{username}/{title}",force=True)
+    else:                                       
+        mk_dataset(local_path,title,force=True)
+
+    print(f"-----Checking dataset version against pip")
+    orig_ds = Path(local_path).ls().sorted()
+    for item in local_path.ls():
+        if item.name not in retain: 
+            if item.is_dir(): shutil.rmtree(item)
+            else: item.unlink()
+    get_pip_libraries(local_path,req_fpath) 
+    
+    new_ds = Path(local_path).ls().sorted()
+    
+    if orig_ds != new_ds: 
+        print(f"-----Updating {title} in Kaggle")
+        push_dataset(local_path,version_notes)
+    else: print(f"-----Kaggle dataset already up to date")
+    print('Complete')
