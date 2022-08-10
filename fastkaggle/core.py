@@ -158,11 +158,14 @@ def get_local_ds_ver(lib_path, # Local path dataset is stored in
     else: return "No Version Found"
 
 # %% ../00_core.ipynb 27
-def create_libs_datasets(libs, # List of libraries to create datasets for (ie ['fastcore','fastkaggle']
+def create_libs_datasets(libs, # library or list of libraries to create datasets for (ie 'fastcore or ['fastcore','fastkaggle']
                          lib_path, # Local path to dl/create dataset
-                         username # You username
+                         username, # You username
+                         clear_after=False # Delete local copies after sync with kaggle?
                         ):
     '''For each library, create or update a kaggle dataset with the latest version'''
+    if type(libs)==str: libs = [libs] 
+    
     retain = ["dataset-metadata.json"]
     for lib in libs:
         title = f"library-{lib}"
@@ -191,6 +194,7 @@ def create_libs_datasets(libs, # List of libraries to create datasets for (ie ['
             print(f"-----Updating {lib} in Kaggle from {ver_local_orig} to {ver_local_new}")
             push_dataset(local_path,ver_local_new)
         else: print(f"-----Kaggle dataset already up to date {ver_local_orig} to {ver_local_new}")
+        if clear_after: shutil.rmtree(local_path)
     print('Complete')
 
 # %% ../00_core.ipynb 28
