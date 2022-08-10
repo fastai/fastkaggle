@@ -171,13 +171,13 @@ def create_libs_datasets(libs, # List of libraries to create datasets for (ie ['
         if Path(local_path).exists(): shutil.rmtree(local_path)
 
         print(f"-----Downloading or Creating Dataset")
-        if check_ds_exists(f"{username}/{title}"): 
-            get_dataset(local_path,f"{username}/{title}",force=True)
-        else:                                       
-            mk_dataset(local_path,title,force=True)
+        try: get_dataset(local_path,f"{username}/{title}",force=True)
+        except Exception as ex:
+            if '404' in str(ex): mk_dataset(local_path,title,force=True)
+            else: raise ex
+            
         print(f"-----Checking dataset version against pip")
         ver_local_orig = get_local_ds_ver(lib_path,lib)
-        orig_ds = Path(local_path).ls().sorted()
 
         for item in local_path.ls():
             if item.name not in retain: 
@@ -186,9 +186,8 @@ def create_libs_datasets(libs, # List of libraries to create datasets for (ie ['
         get_pip_library(local_path,lib)
         
         ver_local_new = get_local_ds_ver(lib_path,lib)
-        new_ds = Path(local_path).ls().sorted()
 
-        if orig_ds != new_ds: 
+        if ver_local_new != ver_local_orig: 
             print(f"-----Updating {lib} in Kaggle from {ver_local_orig} to {ver_local_new}")
             push_dataset(local_path,ver_local_new)
         else: print(f"-----Kaggle dataset already up to date {ver_local_orig} to {ver_local_new}")
