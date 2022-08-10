@@ -152,12 +152,13 @@ def get_local_ds_ver(lib_path, # Local path dataset is stored in
                      lib # Name of library (ie "fastcore")
                     ):
     '''checks a local copy of kaggle dataset for library version number'''
-    lib_whl = (lib_path/f"library-{lib}").ls().filter(lambda x: lib in x.name.lower())
+    wheel_lib_name = lib.replace('-','_')
+    lib_whl = (lib_path/f"library-{lib}").ls().filter(lambda x: wheel_lib_name in x.name.lower())
     if 1==len(lib_whl):
-        return re.search(f"(?<={lib}_)[\d+.]+",lib_whl[0].name.lower().replace('-','_'))[0]
+        return re.search(f"(?<={wheel_lib_name}-)[\d+.]+\d",lib_whl[0].name.lower())[0]
     else: return "No Version Found"
 
-# %% ../00_core.ipynb 27
+# %% ../00_core.ipynb 26
 def create_libs_datasets(libs, # library or list of libraries to create datasets for (ie 'fastcore or ['fastcore','fastkaggle']
                          lib_path, # Local path to dl/create dataset
                          username, # You username
@@ -170,16 +171,16 @@ def create_libs_datasets(libs, # library or list of libraries to create datasets
     for lib in libs:
         title = f"library-{lib}"
         local_path = lib_path/title
-        print(f"Processing {lib} as {title} at {local_path}")
+        print(f"{lib} | Processing as {title} at {local_path}")
         if Path(local_path).exists(): shutil.rmtree(local_path)
 
-        print(f"-----Downloading or Creating Dataset")
+        print(f"{lib} | Downloading or Creating Dataset")
         try: get_dataset(local_path,f"{username}/{title}",force=True)
         except Exception as ex:
             if '404' in str(ex): mk_dataset(local_path,title,force=True)
             else: raise ex
             
-        print(f"-----Checking dataset version against pip")
+        print(f"{lib} | Checking dataset version against pip")
         ver_local_orig = get_local_ds_ver(lib_path,lib)
 
         for item in local_path.ls():
@@ -191,13 +192,13 @@ def create_libs_datasets(libs, # library or list of libraries to create datasets
         ver_local_new = get_local_ds_ver(lib_path,lib)
 
         if ver_local_new != ver_local_orig: 
-            print(f"-----Updating {lib} in Kaggle from {ver_local_orig} to {ver_local_new}")
+            print(f"{lib} | Updating {lib} in Kaggle from {ver_local_orig} to {ver_local_new}")
             push_dataset(local_path,ver_local_new)
-        else: print(f"-----Kaggle dataset already up to date {ver_local_orig} to {ver_local_new}")
+        else: print(f"{lib} | Kaggle dataset already up to date {ver_local_orig} to {ver_local_new}")
         if clear_after: shutil.rmtree(local_path)
-    print('Complete')
+        print(f"{lib} | Complete")
 
-# %% ../00_core.ipynb 28
+# %% ../00_core.ipynb 27
 def create_requirements_dataset(req_fpath, # Path to requirements.txt file
                                 lib_path,#Local path to dl/create dataset
                                 title, # Title you want the kaggle dataset named
