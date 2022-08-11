@@ -196,7 +196,8 @@ def create_libs_datasets(libs, # library or list of libraries to create datasets
         ver_local_new = get_local_ds_ver(lib_path,lib)
         if (ver_local_new != ver_local_orig) or (ver_local_new==None and ver_local_orig==None): 
             print(f"{lib} | Updating {lib} in Kaggle from {ver_local_orig} to {ver_local_new}")
-            push_dataset(local_path,ver_local_new)
+            
+            push_dataset(local_path,ifnone (ver_local_new, "Version Unknown"))
         else: print(f"{lib} | Kaggle dataset already up to date {ver_local_orig} to {ver_local_new}")
         if clear_after: shutil.rmtree(local_path)
         print(f"{lib} | Complete")
