@@ -153,10 +153,15 @@ def get_local_ds_ver(lib_path, # Local path dataset is stored in
                     ):
     '''checks a local copy of kaggle dataset for library version number'''
     wheel_lib_name = lib.replace('-','_')
-    lib_whl = (lib_path/f"library-{lib}").ls().filter(lambda x: wheel_lib_name in x.name.lower())
+    local_path = (lib_path/f"library-{lib}")
+    lib_whl = local_path.ls().filter(lambda x: wheel_lib_name in x.name.lower())
     if 1==len(lib_whl):
         return re.search(f"(?<={wheel_lib_name}-)[\d+.]+\d",lib_whl[0].name.lower())[0]
-    else: return "No Version Found"
+    elif 0<len(local_path.ls().filter(lambda x: 'dist' in x.name)):
+        lib_whl = (local_path/'dist').ls().filter(lambda x: wheel_lib_name in x.name.lower())
+        if 1==len(lib_whl):
+            return re.search(f"(?<={wheel_lib_name}-)[\d+.]+\d",lib_whl[0].name.lower())[0]
+    return None
 
 # %% ../00_core.ipynb 26
 def create_libs_datasets(libs, # library or list of libraries to create datasets for (ie 'fastcore or ['fastcore','fastkaggle']
@@ -188,10 +193,8 @@ def create_libs_datasets(libs, # library or list of libraries to create datasets
                 if item.is_dir(): shutil.rmtree(item)
                 else: item.unlink()
         get_pip_library(local_path,lib)
-        
         ver_local_new = get_local_ds_ver(lib_path,lib)
-
-        if ver_local_new != ver_local_orig: 
+        if (ver_local_new != ver_local_orig) or (ver_local_new==None and ver_local_orig==None): 
             print(f"{lib} | Updating {lib} in Kaggle from {ver_local_orig} to {ver_local_new}")
             push_dataset(local_path,ver_local_new)
         else: print(f"{lib} | Kaggle dataset already up to date {ver_local_orig} to {ver_local_new}")
