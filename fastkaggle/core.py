@@ -64,7 +64,7 @@ def nb_meta(user, id, title, file, competition=None, private=True, gpu=False, in
 # %% ../00_core.ipynb 12
 def push_notebook(user, id, title, file, path='.', competition=None, private=True, gpu=False, internet=True, linked_datasets=[]):
     "Push notebook `file` to Kaggle Notebooks"
-    meta = nb_meta(user, id, title, file=file, competition=competition, private=private, gpu=gpu, internet=internet, linked_datasets=[])
+    meta = nb_meta(user, id, title, file=file, competition=competition, private=private, gpu=gpu, internet=internet, linked_datasets=linked_datasets)
     path = Path(path)
     nm = 'kernel-metadata.json'
     path.mkdir(exist_ok=True, parents=True)
