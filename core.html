@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.0.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="API details for fastkaggle.">
+
+<title>fastkaggle - fastkaggle.core</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="styles.css">
+<meta property="og:title" content="fastkaggle - fastkaggle.core">
+<meta property="og:description" content="API details for fastkaggle.">
+<meta property="og:site-name" content="fastkaggle">
+<meta name="twitter:title" content="fastkaggle - fastkaggle.core">
+<meta name="twitter:description" content="API details for fastkaggle.">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">fastkaggle</span>
+  </a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/fastai/fastkaggle/tree/master/"><i class="bi bi-github" role="img">
+</i> 
+ </a>
+  </li>  
+</ul>
+              <div class="quarto-toggle-container">
+                  <a href="" class="quarto-reader-toggle nav-link" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+              </div>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title">fastkaggle.core</h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">fastkaggle</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./core.html" class="sidebar-item-text sidebar-link active">fastkaggle.core</a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#import_kaggle" id="toc-import_kaggle" class="nav-link active" data-scroll-target="#import_kaggle">import_kaggle</a></li>
+  <li><a href="#setup_comp" id="toc-setup_comp" class="nav-link" data-scroll-target="#setup_comp">setup_comp</a></li>
+  <li><a href="#nb_meta" id="toc-nb_meta" class="nav-link" data-scroll-target="#nb_meta">nb_meta</a></li>
+  <li><a href="#push_notebook" id="toc-push_notebook" class="nav-link" data-scroll-target="#push_notebook">push_notebook</a></li>
+  <li><a href="#datasets" id="toc-datasets" class="nav-link" data-scroll-target="#datasets">Datasets</a>
+  <ul class="collapse">
+  <li><a href="#core" id="toc-core" class="nav-link" data-scroll-target="#core">Core</a>
+  <ul class="collapse">
+  <li><a href="#check_ds_exists" id="toc-check_ds_exists" class="nav-link" data-scroll-target="#check_ds_exists">check_ds_exists</a></li>
+  <li><a href="#mk_dataset" id="toc-mk_dataset" class="nav-link" data-scroll-target="#mk_dataset">mk_dataset</a></li>
+  <li><a href="#get_dataset" id="toc-get_dataset" class="nav-link" data-scroll-target="#get_dataset">get_dataset</a></li>
+  <li><a href="#get_pip_library" id="toc-get_pip_library" class="nav-link" data-scroll-target="#get_pip_library">get_pip_library</a></li>
+  <li><a href="#get_pip_libraries" id="toc-get_pip_libraries" class="nav-link" data-scroll-target="#get_pip_libraries">get_pip_libraries</a></li>
+  <li><a href="#push_dataset" id="toc-push_dataset" class="nav-link" data-scroll-target="#push_dataset">push_dataset</a></li>
+  <li><a href="#get_local_ds_ver" id="toc-get_local_ds_ver" class="nav-link" data-scroll-target="#get_local_ds_ver">get_local_ds_ver</a></li>
+  </ul></li>
+  <li><a href="#high-level" id="toc-high-level" class="nav-link" data-scroll-target="#high-level">High Level</a>
+  <ul class="collapse">
+  <li><a href="#create_libs_datasets" id="toc-create_libs_datasets" class="nav-link" data-scroll-target="#create_libs_datasets">create_libs_datasets</a></li>
+  <li><a href="#create_requirements_dataset" id="toc-create_requirements_dataset" class="nav-link" data-scroll-target="#create_requirements_dataset">create_requirements_dataset</a></li>
+  </ul></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/fastai/fastkaggle/tree/master/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block">fastkaggle.core</h1>
+</div>
+
+<div>
+  <div class="description">
+    API details for fastkaggle.
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    
+    
+  </div>
+  
+
+</header>
+
+<!-- WARNING: THIS FILE WAS AUTOGENERATED! DO NOT EDIT! -->
+<hr>
+<section id="import_kaggle" class="level4">
+<h4 class="anchored" data-anchor-id="import_kaggle">import_kaggle</h4>
+<blockquote class="blockquote">
+<pre><code> import_kaggle ()</code></pre>
+</blockquote>
+<p>Import kaggle API, using Kaggle secrets <code>kaggle_username</code> and <code>kaggle_key</code> if needed</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>api <span class="op">=</span> import_kaggle()</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>L(api.competitions_list())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>(#20) [contradictory-my-dear-watson,gan-getting-started,store-sales-time-series-forecasting,tpu-getting-started,digit-recognizer,titanic,house-prices-advanced-regression-techniques,connectx,nlp-getting-started,spaceship-titanic...]</code></pre>
+</div>
+</div>
+<hr>
+</section>
+<section id="setup_comp" class="level4">
+<h4 class="anchored" data-anchor-id="setup_comp">setup_comp</h4>
+<blockquote class="blockquote">
+<pre><code> setup_comp (competition, install='')</code></pre>
+</blockquote>
+<p>Get a path to data for <code>competition</code>, downloading it if needed</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>setup_comp(<span class="st">'titanic'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>Path('titanic')</code></pre>
+</div>
+</div>
+<p>If you pass a list of space separated modules to <code>install</code>, they’ll be installed if running on Kaggle.</p>
+<hr>
+</section>
+<section id="nb_meta" class="level4">
+<h4 class="anchored" data-anchor-id="nb_meta">nb_meta</h4>
+<blockquote class="blockquote">
+<pre><code> nb_meta (user, id, title, file, competition=None, private=True,
+          gpu=False, internet=True, linked_datasets=None)</code></pre>
+</blockquote>
+<p>Get the <code>dict</code> required for a kernel-metadata.json file</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>nb_meta(<span class="st">'jhoward'</span>, <span class="st">'my-notebook'</span>, <span class="st">'My notebook'</span>, <span class="st">'my-notebook.ipynb'</span>, competition<span class="op">=</span><span class="st">'paddy-disease-classification'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>{'id': 'jhoward/my-notebook',
+ 'title': 'My notebook',
+ 'code_file': 'my-notebook.ipynb',
+ 'language': 'python',
+ 'kernel_type': 'notebook',
+ 'is_private': True,
+ 'enable_gpu': False,
+ 'enable_internet': True,
+ 'keywords': [],
+ 'dataset_sources': [],
+ 'kernel_sources': [],
+ 'competition_sources': ['competitions/paddy-disease-classification']}</code></pre>
+</div>
+</div>
+<hr>
+</section>
+<section id="push_notebook" class="level4">
+<h4 class="anchored" data-anchor-id="push_notebook">push_notebook</h4>
+<blockquote class="blockquote">
+<pre><code> push_notebook (user, id, title, file, path='.', competition=None,
+                private=True, gpu=False, internet=True,
+                linked_datasets=None)</code></pre>
+</blockquote>
+<p>Push notebook <code>file</code> to Kaggle Notebooks</p>
+<p>Note that Kaggle recommends that the <code>id</code> match the <em>slug</em> for the title – i.e it should be the same as the title, but lowercase, no punctuation, and spaces replaced with dashes. E.g:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>push_notebook(<span class="st">'jhoward'</span>, <span class="st">'first-steps-road-to-the-top-part-1'</span>,</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>              title<span class="op">=</span><span class="st">'First Steps: Road to the Top, Part 1'</span>,</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>              <span class="bu">file</span><span class="op">=</span><span class="st">'first-steps-road-to-the-top-part-1.ipynb'</span>,</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>              competition<span class="op">=</span><span class="st">'paddy-disease-classification'</span>,</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>              private<span class="op">=</span><span class="va">False</span>, gpu<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="datasets" class="level2">
+<h2 class="anchored" data-anchor-id="datasets">Datasets</h2>
+<section id="core" class="level3">
+<h3 class="anchored" data-anchor-id="core">Core</h3>
+<hr>
+<section id="check_ds_exists" class="level4">
+<h4 class="anchored" data-anchor-id="check_ds_exists">check_ds_exists</h4>
+<blockquote class="blockquote">
+<pre><code> check_ds_exists (dataset_slug)</code></pre>
+</blockquote>
+<p>Checks if a dataset exists in kaggle and returns boolean</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th></th>
+<th><strong>Details</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>dataset_slug</td>
+<td>Dataset slug (ie “zillow/zecon”)</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+<section id="mk_dataset" class="level4">
+<h4 class="anchored" data-anchor-id="mk_dataset">mk_dataset</h4>
+<blockquote class="blockquote">
+<pre><code> mk_dataset (dataset_path, title, force=False, upload=True)</code></pre>
+</blockquote>
+<p>Creates minimal dataset metadata needed to push new dataset to kaggle</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th></th>
+<th><strong>Type</strong></th>
+<th><strong>Default</strong></th>
+<th><strong>Details</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>dataset_path</td>
+<td></td>
+<td></td>
+<td>Local path to create dataset in</td>
+</tr>
+<tr class="even">
+<td>title</td>
+<td></td>
+<td></td>
+<td>Name of the dataset</td>
+</tr>
+<tr class="odd">
+<td>force</td>
+<td>bool</td>
+<td>False</td>
+<td>Should it overwrite or error if exists?</td>
+</tr>
+<tr class="even">
+<td>upload</td>
+<td>bool</td>
+<td>True</td>
+<td>Should it upload and create on kaggle</td>
+</tr>
+</tbody>
+</table>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>mk_dataset(<span class="st">'./testds'</span>,<span class="st">'mytestds'</span>,force<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>md <span class="op">=</span> json.load(<span class="bu">open</span>(<span class="st">'./testds/dataset-metadata.json'</span>))</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> md[<span class="st">'title'</span>] <span class="op">==</span> <span class="st">'mytestds'</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> md[<span class="st">'id'</span>].endswith(<span class="st">'/mytestds'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Data package template written to: testds/dataset-metadata.json</code></pre>
+</div>
+</div>
+<hr>
+</section>
+<section id="get_dataset" class="level4">
+<h4 class="anchored" data-anchor-id="get_dataset">get_dataset</h4>
+<blockquote class="blockquote">
+<pre><code> get_dataset (dataset_path, dataset_slug, unzip=True, force=False)</code></pre>
+</blockquote>
+<p>Downloads an existing dataset and metadata from kaggle</p>
+<table class="table">
+<colgroup>
+<col style="width: 6%">
+<col style="width: 25%">
+<col style="width: 34%">
+<col style="width: 34%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th><strong>Type</strong></th>
+<th><strong>Default</strong></th>
+<th><strong>Details</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>dataset_path</td>
+<td></td>
+<td></td>
+<td>Local path to download dataset to</td>
+</tr>
+<tr class="even">
+<td>dataset_slug</td>
+<td></td>
+<td></td>
+<td>Dataset slug (ie “zillow/zecon”)</td>
+</tr>
+<tr class="odd">
+<td>unzip</td>
+<td>bool</td>
+<td>True</td>
+<td>Should it unzip after downloading?</td>
+</tr>
+<tr class="even">
+<td>force</td>
+<td>bool</td>
+<td>False</td>
+<td>Should it overwrite or error if dataset_path exists?</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+<section id="get_pip_library" class="level4">
+<h4 class="anchored" data-anchor-id="get_pip_library">get_pip_library</h4>
+<blockquote class="blockquote">
+<pre><code> get_pip_library (dataset_path, pip_library, pip_cmd='pip')</code></pre>
+</blockquote>
+<p>Download the whl files for pip_library and store in dataset_path</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th></th>
+<th><strong>Type</strong></th>
+<th><strong>Default</strong></th>
+<th><strong>Details</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>dataset_path</td>
+<td></td>
+<td></td>
+<td>Local path to download pip library to</td>
+</tr>
+<tr class="even">
+<td>pip_library</td>
+<td></td>
+<td></td>
+<td>name of library for pip to install</td>
+</tr>
+<tr class="odd">
+<td>pip_cmd</td>
+<td>str</td>
+<td>pip</td>
+<td>pip base to use (ie “pip3” or “pip”)</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+<section id="get_pip_libraries" class="level4">
+<h4 class="anchored" data-anchor-id="get_pip_libraries">get_pip_libraries</h4>
+<blockquote class="blockquote">
+<pre><code> get_pip_libraries (dataset_path, requirements_path, pip_cmd='pip')</code></pre>
+</blockquote>
+<p>Download whl files for a requirements.txt file and store in dataset_path</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th></th>
+<th><strong>Type</strong></th>
+<th><strong>Default</strong></th>
+<th><strong>Details</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>dataset_path</td>
+<td></td>
+<td></td>
+<td>Local path to download pip library to</td>
+</tr>
+<tr class="even">
+<td>requirements_path</td>
+<td></td>
+<td></td>
+<td>path to requirements file</td>
+</tr>
+<tr class="odd">
+<td>pip_cmd</td>
+<td>str</td>
+<td>pip</td>
+<td>pip base to use (ie “pip3” or “pip”)</td>
+</tr>
+</tbody>
+</table>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>dl_path <span class="op">=</span> Path(<span class="st">'./mylib'</span>)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>get_pip_library(dl_path,<span class="st">'fastkaggle'</span>)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> <span class="dv">1</span><span class="op">==</span><span class="bu">len</span>([o <span class="cf">for</span> o <span class="kw">in</span> dl_path.ls() <span class="cf">if</span> <span class="bu">str</span>(o).startswith(<span class="ss">f"</span><span class="sc">{</span>dl_path<span class="sc">}</span><span class="ss">/fastkaggle"</span>)])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<hr>
+</section>
+<section id="push_dataset" class="level4">
+<h4 class="anchored" data-anchor-id="push_dataset">push_dataset</h4>
+<blockquote class="blockquote">
+<pre><code> push_dataset (dataset_path, version_comment)</code></pre>
+</blockquote>
+<p>Push dataset update to kaggle. Dataset path must contain dataset metadata file</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th></th>
+<th><strong>Details</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>dataset_path</td>
+<td>Local path where dataset is stored</td>
+</tr>
+<tr class="even">
+<td>version_comment</td>
+<td>Comment associated with this dataset update</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+<section id="get_local_ds_ver" class="level4">
+<h4 class="anchored" data-anchor-id="get_local_ds_ver">get_local_ds_ver</h4>
+<blockquote class="blockquote">
+<pre><code> get_local_ds_ver (lib_path, lib)</code></pre>
+</blockquote>
+<p>checks a local copy of kaggle dataset for library version number</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th></th>
+<th><strong>Details</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>lib_path</td>
+<td>Local path dataset is stored in</td>
+</tr>
+<tr class="even">
+<td>lib</td>
+<td>Name of library (ie “fastcore”)</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="high-level" class="level3">
+<h3 class="anchored" data-anchor-id="high-level">High Level</h3>
+<hr>
+<section id="create_libs_datasets" class="level4">
+<h4 class="anchored" data-anchor-id="create_libs_datasets">create_libs_datasets</h4>
+<blockquote class="blockquote">
+<pre><code> create_libs_datasets (libs, lib_path, username, clear_after=False)</code></pre>
+</blockquote>
+<p>For each library, create or update a kaggle dataset with the latest version</p>
+<table class="table">
+<colgroup>
+<col style="width: 6%">
+<col style="width: 25%">
+<col style="width: 34%">
+<col style="width: 34%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th><strong>Type</strong></th>
+<th><strong>Default</strong></th>
+<th><strong>Details</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>libs</td>
+<td></td>
+<td></td>
+<td>library or list of libraries to create datasets for (ie ’fastcore or [‘fastcore’,‘fastkaggle’]</td>
+</tr>
+<tr class="even">
+<td>lib_path</td>
+<td></td>
+<td></td>
+<td>Local path to dl/create dataset</td>
+</tr>
+<tr class="odd">
+<td>username</td>
+<td></td>
+<td></td>
+<td>You username</td>
+</tr>
+<tr class="even">
+<td>clear_after</td>
+<td>bool</td>
+<td>False</td>
+<td>Delete local copies after sync with kaggle?</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+<section id="create_requirements_dataset" class="level4">
+<h4 class="anchored" data-anchor-id="create_requirements_dataset">create_requirements_dataset</h4>
+<blockquote class="blockquote">
+<pre><code> create_requirements_dataset (req_fpath, lib_path, title, username,
+                              retain=['dataset-metadata.json'],
+                              version_notes='NewUpdate')</code></pre>
+</blockquote>
+<p>Download everything needed in a <code>requirements.txt</code> file to a dataset and upload to kaggle</p>
+<table class="table">
+<colgroup>
+<col style="width: 6%">
+<col style="width: 25%">
+<col style="width: 34%">
+<col style="width: 34%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th><strong>Type</strong></th>
+<th><strong>Default</strong></th>
+<th><strong>Details</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>req_fpath</td>
+<td></td>
+<td></td>
+<td>Path to requirements.txt file</td>
+</tr>
+<tr class="even">
+<td>lib_path</td>
+<td></td>
+<td></td>
+<td>Local path to dl/create dataset</td>
+</tr>
+<tr class="odd">
+<td>title</td>
+<td></td>
+<td></td>
+<td>Title you want the kaggle dataset named</td>
+</tr>
+<tr class="even">
+<td>username</td>
+<td></td>
+<td></td>
+<td>you username</td>
+</tr>
+<tr class="odd">
+<td>retain</td>
+<td>list</td>
+<td>[‘dataset-metadata.json’]</td>
+<td>Files that should not be removed</td>
+</tr>
+<tr class="even">
+<td>version_notes</td>
+<td>str</td>
+<td>New Update</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+
+</section>
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      let href = ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
