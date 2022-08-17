@@ -43,7 +43,7 @@ def setup_comp(competition, install=''):
         return path
 
 # %% ../00_core.ipynb 10
-def nb_meta(user, id, title, file, competition=None, private=True, gpu=False, internet=True, linked_datasets=[]):
+def nb_meta(user, id, title, file, competition=None, private=True, gpu=False, internet=True, linked_datasets=None):
     "Get the `dict` required for a kernel-metadata.json file"
     d = {
       "id": f"{user}/{id}",
@@ -55,14 +55,14 @@ def nb_meta(user, id, title, file, competition=None, private=True, gpu=False, in
       "enable_gpu": gpu,
       "enable_internet": internet,
       "keywords": [],
-      "dataset_sources": linked_datasets,
+      "dataset_sources": linked_datasets if linked_datasets else [],
       "kernel_sources": []
     }
     if competition: d["competition_sources"] = [f"competitions/{competition}"]
     return d
 
 # %% ../00_core.ipynb 12
-def push_notebook(user, id, title, file, path='.', competition=None, private=True, gpu=False, internet=True, linked_datasets=[]):
+def push_notebook(user, id, title, file, path='.', competition=None, private=True, gpu=False, internet=True, linked_datasets=None):
     "Push notebook `file` to Kaggle Notebooks"
     meta = nb_meta(user, id, title, file=file, competition=competition, private=private, gpu=gpu, internet=internet, linked_datasets=linked_datasets)
     path = Path(path)
