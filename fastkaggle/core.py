@@ -86,7 +86,9 @@ def check_ds_exists(dataset_slug # Dataset slug (ie "zillow/zecon")
 def mk_dataset(dataset_path, # Local path to create dataset in
                title, # Name of the dataset
                force=False, # Should it overwrite or error if exists?
-               upload=True # Should it upload and create on kaggle
+               upload=True, # Should it upload and create on kaggle
+               slug=None, # Dataset path, can be autocreated
+               public=False # Should the dataset be public or private
               ):
     '''Creates minimal dataset metadata needed to push new dataset to kaggle'''
     dataset_path = Path(dataset_path)
@@ -95,10 +97,10 @@ def mk_dataset(dataset_path, # Local path to create dataset in
     api.dataset_initialize(dataset_path)
     md = json.load(open(dataset_path/'dataset-metadata.json'))
     md['title'] = title
-    md['id'] = md['id'].replace('INSERT_SLUG_HERE',title)
+    md['id'] = md['id'].replace('INSERT_SLUG_HERE',slug or title.lower().replace(' ', '-'))
     json.dump(md,open(dataset_path/'dataset-metadata.json','w'))
     if upload: (dataset_path/'empty.txt').touch()
-    api.dataset_create_new(str(dataset_path),public=True,dir_mode='zip',quiet=True)
+    api.dataset_create_new(str(dataset_path),public=public,dir_mode='zip',quiet=True)
 
 # %% ../00_core.ipynb 19
 def get_dataset(dataset_path, # Local path to download dataset to
