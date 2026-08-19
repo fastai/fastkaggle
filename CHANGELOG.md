@@ -2,6 +2,13 @@
 
 <!-- do not remove -->
 
+## 0.0.8
+
+### New Features
+
+- Modernize nbdev project layout and packaging; require kaggle v2 API and add `competition_submit` helper ([#21](https://github.com/fastai/fastkaggle/issues/21))
+
+
 ## 0.0.7
 
 ### New Features
@@ -14,7 +21,7 @@
 
 ### Bugs Squashed
 
-- fix comp should be competition in setup_comp" ([#3](https://github.com/fastai/fastkaggle/pull/3)), thanks to [@n-e-w](https://github.com/n-e-w)
+- fix comp should be competition in `setup_comp`" ([#3](https://github.com/fastai/fastkaggle/pull/3)), thanks to [@n-e-w](https://github.com/n-e-w)
 
 
 ## 0.0.4
@@ -27,4 +34,3 @@
 ## 0.0.1
 
 - init release
-
