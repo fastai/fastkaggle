@@ -13,7 +13,7 @@ fastkaggle requires Python 3.10 or later, and version 2 or later of the [kaggle]
 
 ### Competition
 
-This little library is where I’ll be putting snippets of stuff which are useful on Kaggle. Functionality includes the following:
+This little library is where I putt snippets of stuff which are useful on Kaggle. Functionality includes the following:
 
 It defines `iskaggle` which is `True` if you’re running on Kaggle:
 
