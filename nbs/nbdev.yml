@@ -1,0 +1,14 @@
+project:
+  output-dir: _docs
+
+website:
+  title: "fastkaggle"
+  site-url: "https://fastai.github.io/fastkaggle"
+  description: "Kaggling for fast kagglers!"
+  repo-branch: master
+  repo-url: "https://github.com/fastai/fastkaggle"
+
+format-links:
+  - html
+  - format: commonmark
+    text: Markdown

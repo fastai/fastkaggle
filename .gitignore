@@ -2,6 +2,10 @@ sidebar.yml
 conda/
 titanic*
 docs/
+_docs/
+_proc/
+testds/
+mylib/
 
 *.bak
 .gitattributes
