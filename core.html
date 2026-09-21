@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.18">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="Fetch competition data, push notebooks, and maintain library datasets on Kaggle">
+
+<title>core – fastkaggle</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-5ff355f32169432f12e3b54c979a24ba.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="styles.css">
+<meta property="og:title" content="core – fastkaggle">
+<meta property="og:description" content="Fetch competition data, push notebooks, and maintain library datasets on Kaggle">
+<meta property="og:site_name" content="fastkaggle">
+<meta name="twitter:title" content="core – fastkaggle">
+<meta name="twitter:description" content="Fetch competition data, push notebooks, and maintain library datasets on Kaggle">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="nav-sidebar floating nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">fastkaggle</span>
+    </a>
+  </div>
+        <div class="quarto-navbar-tools tools-end">
+</div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./core.html">core</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">fastkaggle</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./core.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">core</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#competitions" id="toc-competitions" class="nav-link active" data-scroll-target="#competitions">Competitions</a></li>
+  <li><a href="#notebooks" id="toc-notebooks" class="nav-link" data-scroll-target="#notebooks">Notebooks</a></li>
+  <li><a href="#datasets" id="toc-datasets" class="nav-link" data-scroll-target="#datasets">Datasets</a>
+  <ul class="collapse">
+  <li><a href="#core" id="toc-core" class="nav-link" data-scroll-target="#core">Core</a></li>
+  <li><a href="#high-level" id="toc-high-level" class="nav-link" data-scroll-target="#high-level">High Level</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/fastai/fastkaggle/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div><div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="core.html.md"><i class="bi bi-file-code"></i>Markdown</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">core</h1>
+</div>
+
+<div>
+  <div class="description">
+    Fetch competition data, push notebooks, and maintain library datasets on Kaggle
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<!-- WARNING: THIS FILE WAS AUTOGENERATED! DO NOT EDIT! -->
+<p>On Kaggle, credentials come from Kaggle secrets rather than the usual <code>~/.kaggle/kaggle.json</code>, so getting an authenticated API client depends on where you are. <a href="https://fastai.github.io/fastkaggle/core.html#import_kaggle"><code>import_kaggle</code></a> handles both cases:</p>
+<div id="b39bd135" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-09-21T03:35:34.431907+00:00&quot;,&quot;shell.execute_reply&quot;:&quot;2026-09-21T03:35:34.494274+00:00&quot;,&quot;total&quot;:0.06236927699999484}}" data-execution_count="4">
+<hr>
+<p><a href="https://github.com/fastai/fastkaggle/blob/master/fastkaggle/core.py#L21" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<section id="import_kaggle" class="level3">
+<h3 class="anchored" data-anchor-id="import_kaggle">import_kaggle</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> import_kaggle():</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Import kaggle API, using Kaggle secrets <code>kaggle_username</code> and <code>kaggle_key</code> if needed</em></p>
+</section>
+</div>
+<p>The kaggle package authenticates when it is first imported, but silently ignores failure. Calling <code>api.authenticate()</code> again means a missing credential fails loudly here, and on Kaggle it picks up the secrets we just copied into the environment.</p>
+<p>The API’s list calls return response objects whose payload lives in an attribute, for example <code>competitions_list().competitions</code>:</p>
+<div id="567e3bf8" class="cell" data-notest="true">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>api <span class="op">=</span> import_kaggle()</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>L(api.competitions_list().competitions).attrgot(<span class="st">'title'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="5">
+<pre><code>['Passenger Screening Algorithm Challenge', 'Zillow Prize: Zillow’s Home Value Prediction (Zestimate)', 'Data Science Bowl 2017', 'Vesuvius Challenge - Ink Detection', 'ARC Prize 2026 - ARC-AGI-3', 'ARC Prize 2026 - ARC-AGI-2', 'Google DeepMind - Vibe Code with Gemini 3 Pro in AI Studio ', 'Red‑Teaming Challenge - OpenAI gpt-oss-20b', 'OpenAI to Z Challenge', 'ARC Prize 2026 - Paper Track', 'The Pokémon Company - PTCG AI Battle Challenge Strategy', 'LLM Prompt Recovery', 'Vesuvius Challenge - Surface Detection', 'Google - American Sign Language Fingerspelling Recognition', 'Second Annual Data Science Bowl', 'The Gemma 4 Good Hackathon', 'Measuring Progress Toward AGI - Cognitive Abilities', 'National Data Science Bowl', '2019 Data Science Bowl', 'Feedback Prize - Evaluating Student Writing']</code></pre>
+</div>
+</div>
+<section id="competitions" class="level2">
+<h2 class="anchored" data-anchor-id="competitions">Competitions</h2>
+<div id="c3552ab9" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-09-21T03:35:34.495620+00:00&quot;,&quot;shell.execute_reply&quot;:&quot;2026-09-21T03:35:34.498439+00:00&quot;,&quot;total&quot;:0.002821199000003105}}" data-execution_count="6">
+<hr>
+<p><a href="https://github.com/fastai/fastkaggle/blob/master/fastkaggle/core.py#L34" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<section id="setup_comp" class="level3">
+<h3 class="anchored" data-anchor-id="setup_comp">setup_comp</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> setup_comp(</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    competition, install:<span class="bu">str</span><span class="op">=</span><span class="st">''</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>):</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Get a path to data for <code>competition</code>, downloading it if needed</em></p>
+</section>
+</div>
+<div id="fe485671" class="cell" data-notest="true">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>setup_comp(<span class="st">'titanic'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="7">
+<pre><code>Path('titanic')</code></pre>
+</div>
+</div>
+<p>If you pass a list of space separated modules to <code>install</code>, they’ll be installed if running on Kaggle.</p>
+<div id="edce0979" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-09-21T03:35:34.499348+00:00&quot;,&quot;shell.execute_reply&quot;:&quot;2026-09-21T03:35:34.501628+00:00&quot;,&quot;total&quot;:0.002283396000002824}}" data-execution_count="8">
+<hr>
+<p><a href="https://github.com/fastai/fastkaggle/blob/master/fastkaggle/core.py#L49" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<section id="competition_submit" class="level3">
+<h3 class="anchored" data-anchor-id="competition_submit">competition_submit</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> competition_submit(</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    file_name, message, competition</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>):</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Submit <code>file_name</code> to <code>competition</code>, returning the submission response</em></p>
+</section>
+</div>
+<p>Once you’ve created a submission file, submit it directly from your script or notebook. E.g:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>competition_submit(<span class="st">'subm.csv'</span>, <span class="st">'first try'</span>, <span class="st">'titanic'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The response includes a <code>message</code> confirming the submission was created. Note that on Kaggle “code competitions” you must instead submit a notebook through <a href="https://fastai.github.io/fastkaggle/core.html#push_notebook"><code>push_notebook</code></a>.</p>
+</section>
+<section id="notebooks" class="level2">
+<h2 class="anchored" data-anchor-id="notebooks">Notebooks</h2>
+<div id="49ad15ab" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-09-21T03:35:34.502843+00:00&quot;,&quot;shell.execute_reply&quot;:&quot;2026-09-21T03:35:34.505578+00:00&quot;,&quot;total&quot;:0.0027375029999987532}}" data-execution_count="10">
+<hr>
+<p><a href="https://github.com/fastai/fastkaggle/blob/master/fastkaggle/core.py#L55" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<section id="nb_meta" class="level3">
+<h3 class="anchored" data-anchor-id="nb_meta">nb_meta</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> nb_meta(</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    user, <span class="bu">id</span>, title, <span class="bu">file</span>, competition:NoneType<span class="op">=</span><span class="va">None</span>, private:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, gpu:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span>, internet:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    linked_datasets:NoneType<span class="op">=</span><span class="va">None</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>):</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Get the <code>dict</code> required for a kernel-metadata.json file</em></p>
+</section>
+</div>
+<div id="0ebd6069" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>nb_meta(<span class="st">'jhoward'</span>, <span class="st">'my-notebook'</span>, <span class="st">'My notebook'</span>, <span class="st">'my-notebook.ipynb'</span>, competition<span class="op">=</span><span class="st">'paddy-disease-classification'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="10">
+<pre><code>{'id': 'jhoward/my-notebook',
+ 'title': 'My notebook',
+ 'code_file': 'my-notebook.ipynb',
+ 'language': 'python',
+ 'kernel_type': 'notebook',
+ 'is_private': True,
+ 'enable_gpu': False,
+ 'enable_internet': True,
+ 'keywords': [],
+ 'dataset_sources': [],
+ 'kernel_sources': [],
+ 'competition_sources': ['competitions/paddy-disease-classification']}</code></pre>
+</div>
+</div>
+<div id="3a09f3ae" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-09-21T03:35:34.506973+00:00&quot;,&quot;shell.execute_reply&quot;:&quot;2026-09-21T03:35:34.509834+00:00&quot;,&quot;total&quot;:0.002862877000005426}}" data-execution_count="12">
+<hr>
+<p><a href="https://github.com/fastai/fastkaggle/blob/master/fastkaggle/core.py#L63" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<section id="push_notebook" class="level3">
+<h3 class="anchored" data-anchor-id="push_notebook">push_notebook</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> push_notebook(</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    user, <span class="bu">id</span>, title, <span class="bu">file</span>, path:<span class="bu">str</span><span class="op">=</span><span class="st">'.'</span>, competition:NoneType<span class="op">=</span><span class="va">None</span>, private:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, gpu:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    internet:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, linked_datasets:NoneType<span class="op">=</span><span class="va">None</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>):</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Push notebook <code>file</code> to Kaggle Notebooks</em></p>
+</section>
+</div>
+<p>Note that Kaggle recommends that the <code>id</code> match the <em>slug</em> for the title – i.e it should be the same as the title, but lowercase, no punctuation, and spaces replaced with dashes. E.g:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>push_notebook(<span class="st">'jhoward'</span>, <span class="st">'first-steps-road-to-the-top-part-1'</span>,</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>              title<span class="op">=</span><span class="st">'First Steps: Road to the Top, Part 1'</span>,</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>              <span class="bu">file</span><span class="op">=</span><span class="st">'first-steps-road-to-the-top-part-1.ipynb'</span>,</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>              competition<span class="op">=</span><span class="st">'paddy-disease-classification'</span>,</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>              private<span class="op">=</span><span class="va">False</span>, gpu<span class="op">=</span><span class="va">True</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The response returned by Kaggle includes the notebook’s <code>url</code>, and an <code>error</code> string if the push failed.</p>
+</section>
+<section id="datasets" class="level2">
+<h2 class="anchored" data-anchor-id="datasets">Datasets</h2>
+<section id="core" class="level3">
+<h3 class="anchored" data-anchor-id="core">Core</h3>
+<div id="667ee427" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-09-21T03:35:34.510750+00:00&quot;,&quot;shell.execute_reply&quot;:&quot;2026-09-21T03:35:34.513004+00:00&quot;,&quot;total&quot;:0.0022557349999985377}}" data-execution_count="14">
+<hr>
+<p><a href="https://github.com/fastai/fastkaggle/blob/master/fastkaggle/core.py#L73" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<section id="check_ds_exists" class="level3">
+<h3 class="anchored" data-anchor-id="check_ds_exists">check_ds_exists</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> check_ds_exists(</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    dataset_slug, <span class="co"># Dataset slug (ie "uciml/iris")</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>):</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Does <code>dataset_slug</code> exist on Kaggle?</em></p>
+</section>
+</div>
+<p>Because it asks Kaggle directly, this works for any public dataset, not just your own. A dataset you cannot see reports as not existing:</p>
+<div id="9df26615" class="cell" data-notest="true">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> <span class="kw">not</span> check_ds_exists(<span class="st">'zillow/no-such-dataset'</span>)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>check_ds_exists(<span class="st">'uciml/iris'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="13">
+<pre><code>True</code></pre>
+</div>
+</div>
+<div id="0699abb7" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-09-21T03:35:34.514676+00:00&quot;,&quot;shell.execute_reply&quot;:&quot;2026-09-21T03:35:34.517526+00:00&quot;,&quot;total&quot;:0.0028524769999975774}}" data-execution_count="16">
+<hr>
+<p><a href="https://github.com/fastai/fastkaggle/blob/master/fastkaggle/core.py#L83" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<section id="mk_dataset" class="level3">
+<h3 class="anchored" data-anchor-id="mk_dataset">mk_dataset</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> mk_dataset(</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    dataset_path, <span class="co"># Local path to create dataset in</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    title, <span class="co"># Name of the dataset</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    force:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span>, <span class="co"># Should it overwrite or error if exists?</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    upload:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, <span class="co"># Should it upload and create on kaggle</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>):</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Creates minimal dataset metadata needed to push new dataset to kaggle</em></p>
+</section>
+</div>
+<p>The <code>upload=False</code> form only creates the folder and its <code>dataset-metadata.json</code> locally, which is also how we can demonstrate it without creating a real dataset:</p>
+<div id="0fae6585" class="cell" data-notest="true">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>mk_dataset(<span class="st">'./testds'</span>, <span class="st">'mytestds'</span>, force<span class="op">=</span><span class="va">True</span>, upload<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>md <span class="op">=</span> json.load(<span class="bu">open</span>(<span class="st">'./testds/dataset-metadata.json'</span>))</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> md[<span class="st">'title'</span>] <span class="op">==</span> <span class="st">'mytestds'</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> md[<span class="st">'id'</span>].endswith(<span class="st">'/mytestds'</span>)</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>md</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Data package template written to: testds/dataset-metadata.json</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="15">
+<pre><code>{'title': 'mytestds',
+ 'id': 'jhoward/mytestds',
+ 'licenses': [{'name': 'CC0-1.0'}]}</code></pre>
+</div>
+</div>
+<p><a href="https://fastai.github.io/fastkaggle/core.html#get_dataset"><code>get_dataset</code></a> downloads an existing dataset, along with its metadata file, ready to update and push back:</p>
+<div id="027c830d" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-09-21T03:35:34.518797+00:00&quot;,&quot;shell.execute_reply&quot;:&quot;2026-09-21T03:35:34.521327+00:00&quot;,&quot;total&quot;:0.0025321000000033678}}" data-execution_count="18">
+<hr>
+<p><a href="https://github.com/fastai/fastkaggle/blob/master/fastkaggle/core.py#L103" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<section id="get_dataset" class="level3">
+<h3 class="anchored" data-anchor-id="get_dataset">get_dataset</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_dataset(</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>    dataset_path, <span class="co"># Local path to download dataset to</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>    dataset_slug, <span class="co"># Dataset slug (ie "uciml/iris")</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>    unzip:<span class="bu">bool</span><span class="op">=</span><span class="va">True</span>, <span class="co"># Should it unzip after downloading?</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    force:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span>, <span class="co"># Should it overwrite or error if dataset_path exists?</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>):</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Downloads an existing dataset and metadata from kaggle</em></p>
+</section>
+</div>
+<p>To fill a library dataset with installable files, download the library’s wheels with pip:</p>
+<div id="67ab503b" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-09-21T03:35:34.522201+00:00&quot;,&quot;shell.execute_reply&quot;:&quot;2026-09-21T03:35:34.524501+00:00&quot;,&quot;total&quot;:0.0023031340000017053}}" data-execution_count="20">
+<hr>
+<p><a href="https://github.com/fastai/fastkaggle/blob/master/fastkaggle/core.py#L116" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<section id="get_pip_library" class="level3">
+<h3 class="anchored" data-anchor-id="get_pip_library">get_pip_library</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_pip_library(</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>    dataset_path, <span class="co"># Local path to download pip library to</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>    pip_library, <span class="co"># name of library for pip to install</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>    pip_cmd:<span class="bu">str</span><span class="op">=</span><span class="st">'pip'</span>, <span class="co"># pip base to use (ie "pip3" or "pip")</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>):</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Download the whl files for <code>pip_library</code> and store in <code>dataset_path</code></em></p>
+</section>
+</div>
+<p><a href="https://fastai.github.io/fastkaggle/core.html#get_pip_libraries"><code>get_pip_libraries</code></a> does the same for everything in a <code>requirements.txt</code> file.</p>
+<div id="7ae83310" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-09-21T03:35:34.525377+00:00&quot;,&quot;shell.execute_reply&quot;:&quot;2026-09-21T03:35:34.527711+00:00&quot;,&quot;total&quot;:0.0023360950000039793}}" data-execution_count="22">
+<hr>
+<p><a href="https://github.com/fastai/fastkaggle/blob/master/fastkaggle/core.py#L125" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<section id="get_pip_libraries" class="level3">
+<h3 class="anchored" data-anchor-id="get_pip_libraries">get_pip_libraries</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_pip_libraries(</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>    dataset_path, <span class="co"># Local path to download pip libraries to</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>    requirements_path, <span class="co"># path to requirements file</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>    pip_cmd:<span class="bu">str</span><span class="op">=</span><span class="st">'pip'</span>, <span class="co"># pip base to use (ie "pip3" or "pip")</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>):</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Download whl files for a <code>requirements.txt</code> file and store in <code>dataset_path</code></em></p>
+</section>
+</div>
+<div id="db6a03fe" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>dl_path <span class="op">=</span> Path(<span class="st">'./mylib'</span>)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>get_pip_library(dl_path,<span class="st">'fastkaggle'</span>)</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> <span class="dv">1</span><span class="op">==</span><span class="bu">len</span>([o <span class="cf">for</span> o <span class="kw">in</span> dl_path.ls() <span class="cf">if</span> <span class="bu">str</span>(o).startswith(<span class="ss">f"</span><span class="sc">{</span>dl_path<span class="sc">}</span><span class="ss">/fastkaggle"</span>)])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Once the local folder holds the new files, <a href="https://fastai.github.io/fastkaggle/core.html#push_dataset"><code>push_dataset</code></a> uploads a new version:</p>
+<div id="9fbfa440" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-09-21T03:35:34.528758+00:00&quot;,&quot;shell.execute_reply&quot;:&quot;2026-09-21T03:35:34.531056+00:00&quot;,&quot;total&quot;:0.0022997870000054377}}" data-execution_count="24">
+<hr>
+<p><a href="https://github.com/fastai/fastkaggle/blob/master/fastkaggle/core.py#L134" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<section id="push_dataset" class="level3">
+<h3 class="anchored" data-anchor-id="push_dataset">push_dataset</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> push_dataset(</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>    dataset_path, <span class="co"># Local path where dataset is stored</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>    version_comment, <span class="co"># Comment associated with this dataset update</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>):</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Push dataset update to kaggle. Dataset path must contain dataset metadata file</em></p>
+</section>
+</div>
+<p><a href="https://fastai.github.io/fastkaggle/core.html#get_local_ds_ver"><code>get_local_ds_ver</code></a> reads the version number from a library’s wheel in a local dataset copy, so the high level functions below can tell whether the Kaggle copy is up to date.</p>
+<div id="9da049d0" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-09-21T03:35:34.532623+00:00&quot;,&quot;shell.execute_reply&quot;:&quot;2026-09-21T03:35:34.535566+00:00&quot;,&quot;total&quot;:0.00294584099999895}}" data-execution_count="26">
+<hr>
+<p><a href="https://github.com/fastai/fastkaggle/blob/master/fastkaggle/core.py#L143" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<section id="get_local_ds_ver" class="level3">
+<h3 class="anchored" data-anchor-id="get_local_ds_ver">get_local_ds_ver</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_local_ds_ver(</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>    lib_path, <span class="co"># Local path dataset is stored in</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>    lib, <span class="co"># Name of library (ie "fastcore")</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>):</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Checks a local copy of kaggle dataset for library version number</em></p>
+</section>
+</div>
+</section>
+<section id="high-level" class="level3">
+<h3 class="anchored" data-anchor-id="high-level">High Level</h3>
+<div id="3caef824" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-09-21T03:35:34.537960+00:00&quot;,&quot;shell.execute_reply&quot;:&quot;2026-09-21T03:35:34.541559+00:00&quot;,&quot;total&quot;:0.003601264000003823}}" data-execution_count="28">
+<hr>
+<p><a href="https://github.com/fastai/fastkaggle/blob/master/fastkaggle/core.py#L158" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<section id="create_libs_datasets" class="level3">
+<h3 class="anchored" data-anchor-id="create_libs_datasets">create_libs_datasets</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> create_libs_datasets(</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>    libs, <span class="co"># library or list of libraries to create datasets for (ie 'fastcore' or ['fastcore','fastkaggle'])</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>    lib_path, <span class="co"># Local path to dl/create dataset</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>    username, <span class="co"># Your username</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>    clear_after:<span class="bu">bool</span><span class="op">=</span><span class="va">False</span>, <span class="co"># Delete local copies after sync with kaggle?</span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>):</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>For each library, create or update a kaggle dataset with the latest version</em></p>
+</section>
+</div>
+<div id="1eba8dcf" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-09-21T03:35:34.543390+00:00&quot;,&quot;shell.execute_reply&quot;:&quot;2026-09-21T03:35:34.546686+00:00&quot;,&quot;total&quot;:0.003298508000000311}}" data-execution_count="30">
+<hr>
+<p><a href="https://github.com/fastai/fastkaggle/blob/master/fastkaggle/core.py#L192" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<section id="create_requirements_dataset" class="level3">
+<h3 class="anchored" data-anchor-id="create_requirements_dataset">create_requirements_dataset</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> create_requirements_dataset(</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>    req_fpath, <span class="co"># Path to requirements.txt file</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>    lib_path, <span class="co"># Local path to dl/create dataset</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>    title, <span class="co"># Title you want the kaggle dataset named</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>    username, <span class="co"># Your username</span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>    retain:<span class="bu">list</span><span class="op">=</span>[<span class="st">'dataset-metadata.json'</span>], <span class="co"># Files that should not be removed</span></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>    version_notes:<span class="bu">str</span><span class="op">=</span><span class="st">'New Update'</span>, <span class="co"># Comment associated with this dataset update</span></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>):</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Download everything needed in a <code>requirements.txt</code> file to a dataset and upload to kaggle</em></p>
+</section>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/fastai\.github\.io\/fastkaggle");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/fastai/fastkaggle/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>

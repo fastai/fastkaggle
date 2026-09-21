@@ -1,0 +1,72 @@
+[
+  {
+    "objectID": "core.html",
+    "href": "core.html",
+    "title": "core",
+    "section": "",
+    "text": "On Kaggle, credentials come from Kaggle secrets rather than the usual ~/.kaggle/kaggle.json, so getting an authenticated API client depends on where you are. import_kaggle handles both cases:\nsource\n\nimport_kaggle\ndef import_kaggle():\nImport kaggle API, using Kaggle secrets kaggle_username and kaggle_key if needed\nThe kaggle package authenticates when it is first imported, but silently ignores failure. Calling api.authenticate() again means a missing credential fails loudly here, and on Kaggle it picks up the secrets we just copied into the environment.\nThe API’s list calls return response objects whose payload lives in an attribute, for example competitions_list().competitions:\napi = import_kaggle()\nL(api.competitions_list().competitions).attrgot('title')\n\n['Passenger Screening Algorithm Challenge', 'Zillow Prize: Zillow’s Home Value Prediction (Zestimate)', 'Data Science Bowl 2017', 'Vesuvius Challenge - Ink Detection', 'ARC Prize 2026 - ARC-AGI-3', 'ARC Prize 2026 - ARC-AGI-2', 'Google DeepMind - Vibe Code with Gemini 3 Pro in AI Studio ', 'Red‑Teaming Challenge - OpenAI gpt-oss-20b', 'OpenAI to Z Challenge', 'ARC Prize 2026 - Paper Track', 'The Pokémon Company - PTCG AI Battle Challenge Strategy', 'LLM Prompt Recovery', 'Vesuvius Challenge - Surface Detection', 'Google - American Sign Language Fingerspelling Recognition', 'Second Annual Data Science Bowl', 'The Gemma 4 Good Hackathon', 'Measuring Progress Toward AGI - Cognitive Abilities', 'National Data Science Bowl', '2019 Data Science Bowl', 'Feedback Prize - Evaluating Student Writing']",
+    "crumbs": [
+      "core"
+    ]
+  },
+  {
+    "objectID": "core.html#competitions",
+    "href": "core.html#competitions",
+    "title": "core",
+    "section": "Competitions",
+    "text": "Competitions\n\n\nsource\n\nsetup_comp\ndef setup_comp(\n    competition, install:str=''\n):\nGet a path to data for competition, downloading it if needed\n\n\n\nsetup_comp('titanic')\n\nPath('titanic')\n\n\nIf you pass a list of space separated modules to install, they’ll be installed if running on Kaggle.\n\n\nsource\n\ncompetition_submit\ndef competition_submit(\n    file_name, message, competition\n):\nSubmit file_name to competition, returning the submission response\n\n\nOnce you’ve created a submission file, submit it directly from your script or notebook. E.g:\ncompetition_submit('subm.csv', 'first try', 'titanic')\nThe response includes a message confirming the submission was created. Note that on Kaggle “code competitions” you must instead submit a notebook through push_notebook.",
+    "crumbs": [
+      "core"
+    ]
+  },
+  {
+    "objectID": "core.html#notebooks",
+    "href": "core.html#notebooks",
+    "title": "core",
+    "section": "Notebooks",
+    "text": "Notebooks\n\n\nsource\n\nnb_meta\ndef nb_meta(\n    user, id, title, file, competition:NoneType=None, private:bool=True, gpu:bool=False, internet:bool=True,\n    linked_datasets:NoneType=None\n):\nGet the dict required for a kernel-metadata.json file\n\n\n\nnb_meta('jhoward', 'my-notebook', 'My notebook', 'my-notebook.ipynb', competition='paddy-disease-classification')\n\n{'id': 'jhoward/my-notebook',\n 'title': 'My notebook',\n 'code_file': 'my-notebook.ipynb',\n 'language': 'python',\n 'kernel_type': 'notebook',\n 'is_private': True,\n 'enable_gpu': False,\n 'enable_internet': True,\n 'keywords': [],\n 'dataset_sources': [],\n 'kernel_sources': [],\n 'competition_sources': ['competitions/paddy-disease-classification']}\n\n\n\n\nsource\n\npush_notebook\ndef push_notebook(\n    user, id, title, file, path:str='.', competition:NoneType=None, private:bool=True, gpu:bool=False,\n    internet:bool=True, linked_datasets:NoneType=None\n):\nPush notebook file to Kaggle Notebooks\n\n\nNote that Kaggle recommends that the id match the slug for the title – i.e it should be the same as the title, but lowercase, no punctuation, and spaces replaced with dashes. E.g:\npush_notebook('jhoward', 'first-steps-road-to-the-top-part-1',\n              title='First Steps: Road to the Top, Part 1',\n              file='first-steps-road-to-the-top-part-1.ipynb',\n              competition='paddy-disease-classification',\n              private=False, gpu=True)\nThe response returned by Kaggle includes the notebook’s url, and an error string if the push failed.",
+    "crumbs": [
+      "core"
+    ]
+  },
+  {
+    "objectID": "core.html#datasets",
+    "href": "core.html#datasets",
+    "title": "core",
+    "section": "Datasets",
+    "text": "Datasets\n\nCore\n\n\nsource\n\ncheck_ds_exists\ndef check_ds_exists(\n    dataset_slug, # Dataset slug (ie \"uciml/iris\")\n):\nDoes dataset_slug exist on Kaggle?\n\n\nBecause it asks Kaggle directly, this works for any public dataset, not just your own. A dataset you cannot see reports as not existing:\n\nassert not check_ds_exists('zillow/no-such-dataset')\ncheck_ds_exists('uciml/iris')\n\nTrue\n\n\n\n\nsource\n\nmk_dataset\ndef mk_dataset(\n    dataset_path, # Local path to create dataset in\n    title, # Name of the dataset\n    force:bool=False, # Should it overwrite or error if exists?\n    upload:bool=True, # Should it upload and create on kaggle\n):\nCreates minimal dataset metadata needed to push new dataset to kaggle\n\n\nThe upload=False form only creates the folder and its dataset-metadata.json locally, which is also how we can demonstrate it without creating a real dataset:\n\nmk_dataset('./testds', 'mytestds', force=True, upload=False)\nmd = json.load(open('./testds/dataset-metadata.json'))\nassert md['title'] == 'mytestds'\nassert md['id'].endswith('/mytestds')\nmd\n\nData package template written to: testds/dataset-metadata.json\n\n\n{'title': 'mytestds',\n 'id': 'jhoward/mytestds',\n 'licenses': [{'name': 'CC0-1.0'}]}\n\n\nget_dataset downloads an existing dataset, along with its metadata file, ready to update and push back:\n\n\nsource\n\nget_dataset\ndef get_dataset(\n    dataset_path, # Local path to download dataset to\n    dataset_slug, # Dataset slug (ie \"uciml/iris\")\n    unzip:bool=True, # Should it unzip after downloading?\n    force:bool=False, # Should it overwrite or error if dataset_path exists?\n):\nDownloads an existing dataset and metadata from kaggle\n\n\nTo fill a library dataset with installable files, download the library’s wheels with pip:\n\n\nsource\n\nget_pip_library\ndef get_pip_library(\n    dataset_path, # Local path to download pip library to\n    pip_library, # name of library for pip to install\n    pip_cmd:str='pip', # pip base to use (ie \"pip3\" or \"pip\")\n):\nDownload the whl files for pip_library and store in dataset_path\n\n\nget_pip_libraries does the same for everything in a requirements.txt file.\n\n\nsource\n\nget_pip_libraries\ndef get_pip_libraries(\n    dataset_path, # Local path to download pip libraries to\n    requirements_path, # path to requirements file\n    pip_cmd:str='pip', # pip base to use (ie \"pip3\" or \"pip\")\n):\nDownload whl files for a requirements.txt file and store in dataset_path\n\n\n\ndl_path = Path('./mylib')\nget_pip_library(dl_path,'fastkaggle')\nassert 1==len([o for o in dl_path.ls() if str(o).startswith(f\"{dl_path}/fastkaggle\")])\n\nOnce the local folder holds the new files, push_dataset uploads a new version:\n\n\nsource\n\npush_dataset\ndef push_dataset(\n    dataset_path, # Local path where dataset is stored\n    version_comment, # Comment associated with this dataset update\n):\nPush dataset update to kaggle. Dataset path must contain dataset metadata file\n\n\nget_local_ds_ver reads the version number from a library’s wheel in a local dataset copy, so the high level functions below can tell whether the Kaggle copy is up to date.\n\n\nsource\n\nget_local_ds_ver\ndef get_local_ds_ver(\n    lib_path, # Local path dataset is stored in\n    lib, # Name of library (ie \"fastcore\")\n):\nChecks a local copy of kaggle dataset for library version number\n\n\n\n\nHigh Level\n\n\nsource\n\ncreate_libs_datasets\ndef create_libs_datasets(\n    libs, # library or list of libraries to create datasets for (ie 'fastcore' or ['fastcore','fastkaggle'])\n    lib_path, # Local path to dl/create dataset\n    username, # Your username\n    clear_after:bool=False, # Delete local copies after sync with kaggle?\n):\nFor each library, create or update a kaggle dataset with the latest version\n\n\n\n\nsource\n\ncreate_requirements_dataset\ndef create_requirements_dataset(\n    req_fpath, # Path to requirements.txt file\n    lib_path, # Local path to dl/create dataset\n    title, # Title you want the kaggle dataset named\n    username, # Your username\n    retain:list=['dataset-metadata.json'], # Files that should not be removed\n    version_notes:str='New Update', # Comment associated with this dataset update\n):\nDownload everything needed in a requirements.txt file to a dataset and upload to kaggle",
+    "crumbs": [
+      "core"
+    ]
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "fastkaggle",
+    "section": "",
+    "text": "pip install fastkaggle\nfastkaggle requires Python 3.10 or later, and version 2 or later of the kaggle API package. To use it you’ll need Kaggle API credentials, either in ~/.kaggle/kaggle.json (downloaded from your Kaggle account page) or in the KAGGLE_USERNAME and KAGGLE_KEY environment variables. On Kaggle itself, add kaggle_username and kaggle_key to your Kaggle secrets instead.",
+    "crumbs": [
+      "fastkaggle"
+    ]
+  },
+  {
+    "objectID": "index.html#install",
+    "href": "index.html#install",
+    "title": "fastkaggle",
+    "section": "",
+    "text": "pip install fastkaggle\nfastkaggle requires Python 3.10 or later, and version 2 or later of the kaggle API package. To use it you’ll need Kaggle API credentials, either in ~/.kaggle/kaggle.json (downloaded from your Kaggle account page) or in the KAGGLE_USERNAME and KAGGLE_KEY environment variables. On Kaggle itself, add kaggle_username and kaggle_key to your Kaggle secrets instead.",
+    "crumbs": [
+      "fastkaggle"
+    ]
+  },
+  {
+    "objectID": "index.html#how-to-use",
+    "href": "index.html#how-to-use",
+    "title": "fastkaggle",
+    "section": "How to use",
+    "text": "How to use\n\nCompetition\nThis little library is where I’ll be putting snippets of stuff which are useful on Kaggle. Functionality includes the following:\nIt defines iskaggle which is True if you’re running on Kaggle:\n\n'Kaggle' if iskaggle else 'Not Kaggle'\n\n'Not Kaggle'\n\n\nIt provides a setup_comp function which gets a path to the data for a competition, downloading it if needed, and also installs any modules that might be missing or out of date if running on Kaggle:\n\nsetup_comp('titanic')\n\nPath('titanic')\n\n\nThere’s also competition_submit to submit a predictions file, push_notebook to push a notebook to Kaggle Notebooks, and import_kaggle to use the Kaggle API (even when you’re on Kaggle!) See the fastkaggle.core docs for details.\n\n\nDatasets\nThis section is designed to make uploading pip libraries to kaggle datasets easy. There’s 2 primary high level functions to be used. First we can define our kaggle username and the local path we want to use to store datasets when we create them.\n\n\n\n\n\n\nTipUsage tip\n\n\n\nThe purpose of this is to create datasets that can be used in no internet inference competitions to install libraries using pip install -Uqq library --no-index --find-links=file:///kaggle/input/your_dataset/\n\n\n\nlib_path = Path.home()/'kaggle_datasets'\nusername = 'isaacflath'\n\n\nList of Libraries\nWe can take a list of libraries and upload them as separate datasets. For example the below will create a library-fastcore and library-timm dataset. If they already exist, it will push a new version if there is a more recent version available.\n\nlibs = ['fastcore','flask','fastkaggle']\ncreate_libs_datasets(libs,lib_path,username)\n\nProcessing fastcore as library-fastcore at /Users/isaacflath/kaggle_datasets/library-fastcore\n-----Downloading or Creating Dataset\n-----Checking dataset version against pip\n-----Kaggle dataset already up to date 1.5.16 to 1.5.16\nProcessing flask as library-flask at /Users/isaacflath/kaggle_datasets/library-flask\n-----Downloading or Creating Dataset\n-----Checking dataset version against pip\n-----Kaggle dataset already up to date 2.2.2 to 2.2.2\nProcessing fastkaggle as library-fastkaggle at /Users/isaacflath/kaggle_datasets/library-fastkaggle\n-----Downloading or Creating Dataset\n-----Checking dataset version against pip\n-----Kaggle dataset already up to date 0.0.6 to 0.0.6\nComplete\n\n\nThis creates datasets in kaggle with the needed files. For example the library fastkaggle looks like this in kaggle.\n\n\n\nFastkaggle Dataset\n\n\n\n\nrequirements.txt\nWe can also create a singular dataset with multiple libraries based on a requirements.txt file for the project. If there are any different files it will push a new version.\n\ncreate_requirements_dataset('test_files/requirements.txt',lib_path,'libraries-pawpularity', username)\n\nProcessing libraries-pawpularity at /root/kaggle_datasets/libraries-pawpularity\n-----Downloading or Creating Dataset\nData package template written to: /root/kaggle_datasets/libraries-pawpularity/dataset-metadata.json\n-----Checking dataset version against pip\n-----Updating libraries-pawpularity in Kaggle\nComplete\n\n\nThis creates a dataset in kaggle with the needed files.\n\n\n\nPawpularity Dataset",
+    "crumbs": [
+      "fastkaggle"
+    ]
+  }
+]
